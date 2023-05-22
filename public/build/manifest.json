@@ -1,0 +1,68 @@
+{
+  "__plugin-vue_export-helper-9afa08aa.js": {
+    "file": "assets/_plugin-vue_export-helper-9afa08aa.js"
+  },
+  "_bootstrap.esm-1347184b.js": {
+    "assets": [
+      "assets/tabler-icons-eea094c0.eot",
+      "assets/tabler-icons-7a908f30.woff2",
+      "assets/tabler-icons-65c0a2e1.woff",
+      "assets/tabler-icons-4420bac6.ttf",
+      "assets/tabler-icons-ad454893.svg"
+    ],
+    "css": [
+      "assets/bootstrap-65669245.css"
+    ],
+    "file": "assets/bootstrap.esm-1347184b.js"
+  },
+  "bootstrap.css": {
+    "file": "assets/bootstrap-65669245.css",
+    "src": "bootstrap.css"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-4957d80c.js",
+    "imports": [
+      "_bootstrap.esm-1347184b.js",
+      "__plugin-vue_export-helper-9afa08aa.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  },
+  "resources/js/login.js": {
+    "file": "assets/login-3aef336d.js",
+    "imports": [
+      "_bootstrap.esm-1347184b.js",
+      "__plugin-vue_export-helper-9afa08aa.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/login.js"
+  },
+  "resources/js/main.js": {
+    "file": "assets/main-f70759d6.js",
+    "imports": [
+      "_bootstrap.esm-1347184b.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/main.js"
+  },
+  "storage/app/public/css/icons/tabler-icons/fonts/tabler-icons.eot": {
+    "file": "assets/tabler-icons-eea094c0.eot",
+    "src": "storage/app/public/css/icons/tabler-icons/fonts/tabler-icons.eot"
+  },
+  "storage/app/public/css/icons/tabler-icons/fonts/tabler-icons.svg": {
+    "file": "assets/tabler-icons-ad454893.svg",
+    "src": "storage/app/public/css/icons/tabler-icons/fonts/tabler-icons.svg"
+  },
+  "storage/app/public/css/icons/tabler-icons/fonts/tabler-icons.ttf": {
+    "file": "assets/tabler-icons-4420bac6.ttf",
+    "src": "storage/app/public/css/icons/tabler-icons/fonts/tabler-icons.ttf"
+  },
+  "storage/app/public/css/icons/tabler-icons/fonts/tabler-icons.woff": {
+    "file": "assets/tabler-icons-65c0a2e1.woff",
+    "src": "storage/app/public/css/icons/tabler-icons/fonts/tabler-icons.woff"
+  },
+  "storage/app/public/css/icons/tabler-icons/fonts/tabler-icons.woff2": {
+    "file": "assets/tabler-icons-7a908f30.woff2",
+    "src": "storage/app/public/css/icons/tabler-icons/fonts/tabler-icons.woff2"
+  }
+}
