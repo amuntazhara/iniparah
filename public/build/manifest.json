@@ -20,7 +20,7 @@
     "src": "bootstrap.css"
   },
   "resources/js/app.js": {
-    "file": "assets/app-4957d80c.js",
+    "file": "assets/app-34c1b75d.js",
     "imports": [
       "_bootstrap.esm-1347184b.js",
       "__plugin-vue_export-helper-9afa08aa.js"

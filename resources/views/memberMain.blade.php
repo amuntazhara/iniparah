@@ -64,8 +64,8 @@
                         <p>Voucher Anda telah digunakan untuk spin. Silahkan hubungi admin apabila hadiah belum diterima.</p>
                     </div>
                     <div class="modal-footer pt-0">
-                        <a role="button" class="btn btn-lg w-100" onclick="voucherOther()">
-                            <strong class="">Gunakan Voucher Lain</strong>
+                        <a role="button" class="btn btn-lg w-100" data-bs-dismiss="modal">
+                            <strong class="">OK</strong>
                         </a>
                     </div>
                 </div>
@@ -131,7 +131,6 @@
     </body>
     <script>
         // Untuk session spin
-        var sessName = "{{ session()->get('username') }}"
         var usr = null
 
         // Game config untuk Phaser.Game
@@ -143,7 +142,7 @@
                     "{{ $key['hadiah'] }}",
                 @php endforeach @endphp
             ],
-            rotationTime: 500
+            rotationTime: 10000
         }
 
         window.onload = function () {
@@ -168,16 +167,8 @@
             window.focus()
             $('#rules').modal('show')
 
-            document.getElementById('rules').addEventListener('hidden.bs.modal', async function (event) {
-                await checkClaim()
-                .then((result) => {
-                    console.log(result)
-                    scene.canSpin = true
-                })
-                .catch((error) => {
-                    console.log(error)
-                    scene.canSpin = false
-                })
+            document.getElementById('rules').addEventListener('hidden.bs.modal', function (event) {
+                $('#form').modal('show')
             })
         }
 
@@ -214,7 +205,7 @@
 
             spinWheel() {
                 if (this.canSpin) {
-                    var rounds = Phaser.Math.Between(4, 6)
+                    var rounds = Phaser.Math.Between(20, 24)
                     var degrees = Phaser.Math.Between(321, 355)
                     var prize = gameOptions.slices - 1 - Math.floor(degrees / (360 / gameOptions.slices))
                     // this.canSpin = true
@@ -231,6 +222,8 @@
                             updateDB()
                         }
                     })
+                } else {
+                    $('#noSpin').modal('show')
                 }
             }
         }
@@ -255,32 +248,6 @@
                     $('#errMsg').text(error.response.data)
                     $('#errMsg').removeClass('d-none')
                 })
-        }
-
-        function checkClaim() {
-            return new Promise((resolve, reject) => {
-                if (sessName != '') {
-                    usr = sessName
-                    let data = { username: sessName }
-                    axios
-                    .post('/check_claim', {data: JSON.stringify(data)})
-                    .then((result) => {
-                        if (result.data == 1) {
-                            $('#noSpin').modal('show')
-                            reject('sudah spin')
-                        } else {
-                            resolve('belum spin')
-                        }
-                    })
-                } else {
-                    $('#form').modal('show')
-                }
-            })
-        }
-
-        function voucherOther() {
-            $('#noSpin').modal('hide')
-            document.getElementById('noSpin').addEventListener('hidden.bs.modal', () => $('#form').modal('show'))
         }
 
         function updateDB() {

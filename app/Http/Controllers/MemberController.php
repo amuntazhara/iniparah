@@ -57,7 +57,10 @@ class MemberController extends Controller
             return response()->json('Voucher yang Anda masukkan salah.', 400);
         } else {
             $get = Member::where(['username' => $username, 'voucher' => $voucher])->first();
-            session()->put('username', $get->username);
+            if($get->klaim == 1)
+                return response()->json('Voucher tidak dapat digunakan lebih dari satu kali.', 400);
+                
+            // session()->put('username', $get->username);
             return response()->json($get->username, 200);
         }
     }
