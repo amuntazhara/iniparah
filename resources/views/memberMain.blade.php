@@ -67,6 +67,9 @@
                         <a role="button" class="btn btn-lg w-100" data-bs-dismiss="modal">
                             <strong class="">OK</strong>
                         </a>
+                        <button type="button" class="btn w-100" onclick="otherVoucher()">
+                            <strong class="text-danger">Gunakan voucher lain</strong>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -248,6 +251,14 @@
                     $('#errMsg').text(error.response.data)
                     $('#errMsg').removeClass('d-none')
                 })
+        }
+
+        function otherVoucher() {
+            $('#noSpin').modal('hide')
+            document.getElementById('noSpin').addEventListener('hidden.bs.modal', function (event) {
+                $('#form').modal('show')
+            })
+            // $('#form').modal('show')
         }
 
         function updateDB() {
