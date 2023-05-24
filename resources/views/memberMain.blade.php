@@ -145,7 +145,7 @@
                     "{{ $key['hadiah'] }}",
                 @php endforeach @endphp
             ],
-            rotationTime: 10000
+            rotationTime: 8000
         }
 
         window.onload = function () {
@@ -208,7 +208,7 @@
 
             spinWheel() {
                 if (this.canSpin) {
-                    var rounds = Phaser.Math.Between(20, 24)
+                    var rounds = Phaser.Math.Between(16, 20)
                     var degrees = Phaser.Math.Between(321, 355)
                     var prize = gameOptions.slices - 1 - Math.floor(degrees / (360 / gameOptions.slices))
                     // this.canSpin = true
@@ -246,6 +246,7 @@
                 .then((result) => {
                     usr = result.data
                     $('#form').modal('hide')
+                    game.scene.scenes[0].canSpin = true
                 })
                 .catch((error) => {
                     $('#errMsg').text(error.response.data)
@@ -255,10 +256,7 @@
 
         function otherVoucher() {
             $('#noSpin').modal('hide')
-            document.getElementById('noSpin').addEventListener('hidden.bs.modal', function (event) {
-                $('#form').modal('show')
-            })
-            // $('#form').modal('show')
+            $('#form').modal('show')
         }
 
         function updateDB() {

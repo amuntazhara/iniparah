@@ -58,8 +58,8 @@ class MemberController extends Controller
         } else {
             $get = Member::where(['username' => $username, 'voucher' => $voucher])->first();
             if($get->klaim == 1)
-                return response()->json('Voucher tidak dapat digunakan lebih dari satu kali.', 400);
-                
+                return response()->json('Voucher hanya dapat digunakan satu kali.', 400);
+
             // session()->put('username', $get->username);
             return response()->json($get->username, 200);
         }
