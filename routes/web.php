@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('/get_members', [MemberController::class, 'get_members']);
   Route::post('/add_member', [MemberController::class, 'add_member']);
   Route::post('/find_member', [MemberController::class, 'find_member']);
+  Route::post('/confirm_process', [MemberController::class, 'confirm_process']);
   
   Route::get('/get_prizes', [PrizeController::class, 'get_prizes']);
   Route::post('/update_prizes', [PrizeController::class, 'update_prizes']);

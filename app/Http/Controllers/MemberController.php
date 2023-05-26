@@ -35,7 +35,8 @@ class MemberController extends Controller
     {
         $data = json_decode(request()->data);
         $username = $data->username;
-        $voucher = substr(str_shuffle(str_repeat('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',16)),0,16);
+        $voucher = $data->voucher;
+        // $voucher = substr(str_shuffle(str_repeat('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',16)),0,16);
         $member = Member::selectRaw('username')->where(['username' => $username])->get();
 
         if ($member->count() == 0) {
@@ -78,5 +79,17 @@ class MemberController extends Controller
         $check = Member::where('username', $data->username)->first();
         $claim = $check->klaim;
         return response()->json($claim, 200);
+    }
+
+    public function confirm_process()
+    {
+        $data = json_decode(request()->data);
+        $member = Member::where('username', $data->username)->first();
+        
+        if ($member->klaim == 0)
+            return response()->json(400);
+        else
+            Member::where('username', $data->username)->update(['proses' => 1]);
+            return response()->json(200);
     }
 }

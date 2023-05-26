@@ -150,7 +150,7 @@
 
         window.onload = function () {
             var scene = new playGame()
-            scene.canSpin = true
+            scene.canSpin = false
             
             var gameConfig = {
                 type: Phaser.AUTO,
@@ -211,7 +211,6 @@
                     var rounds = Phaser.Math.Between(16, 20)
                     var degrees = Phaser.Math.Between(321, 355)
                     var prize = gameOptions.slices - 1 - Math.floor(degrees / (360 / gameOptions.slices))
-                    // this.canSpin = true
                     this.tweens.add({
                         targets: [this.wheel],
                         angle: 360 * rounds + degrees,

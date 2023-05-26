@@ -8,9 +8,23 @@
       </h2>
       <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
         <div class="accordion-body p-2">
-          <div class="row align-items-center">
+          <div class="row">
             <form @submit.prevent="addMember" class="col-6">
-              <label>Tambah</label>
+              <label class="mb-1">Tambah Member</label>
+              <div class="row align-items-center">
+                <div class="col-5">
+                  <input :class="'form-control form-control-sm ' + inputBorderUser" type="text" v-model="userAdd" placeholder="Username">
+                </div>
+                <div class="col-5">
+                  <input :class="'form-control form-control-sm ' + inputBorderVoucher" type="text" v-model="voucherAdd" placeholder="Voucher" @focus="createVoucher">
+                </div>
+                <div class="col-2">
+                  <button class="btn btn-sm btn-success w-100">
+                    <i class="ti ti-user-plus"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- <label>Tambah</label>
               <div class="row">
                 <div class="col">
                   <input :class="'form-control form-control-sm ' + inputBorder" type="text" v-model="userAdd" placeholder="Masukkan Username">
@@ -20,19 +34,18 @@
                     <i class="ti ti-user-plus"></i>
                   </button>
                 </div>
-              </div>
+              </div> -->
             </form>
             <form class="col-6 align-items-center">
-              <div><label>Cari</label> <img src="storage/images/spinner.svg" alt="" width="10" v-show="isSearching"></div>
-              <div>
-                <input class="form-control form-control-sm" type="text" v-model="userFind" placeholder="Masukkan Username" @input="findMember">
-              </div>
+              <label class="mb-1">Cari</label> <img src="storage/images/spinner.svg" alt="" width="10" v-show="isSearching">
+              <input class="form-control form-control-sm" type="text" v-model="userFind" placeholder="Masukkan Username" @input="findMember">
             </form>
           </div>
         </div>
       </div>
     </div>
   </div>
+  
   <div class="card">
     <div class="card-body p-1">
       <table class="table table-hover table-striped">
@@ -47,29 +60,65 @@
             <td class="border border-light text-left py-1">{{ member.username }}</td>
             <td class="border border-light text-left py-1">{{ member.voucher }}</td>
             <td class="border border-light text-center py-1">
-              <span v-if="member.klaim == 0">Belum</span>
-              <span v-else>Sudah</span>
+              <span v-if="member.klaim == 0" class="text-danger">Belum</span>
+              <span v-else class="text-success">Sudah</span>
             </td>
             <td class="border border-light text-center py-1">
-              <span v-if="member.proses == 0">Belum</span>
-              <span v-else>Sudah</span>
+              <div v-if="member.proses == 0">
+                <span class="me-2 text-danger">Belum</span>
+                <button class="btn btn-sm btn-success py-0 px-1" data-bs-target="#konfirmasi" data-bs-toggle="modal" @click="konfirmasi(member.username)">
+                  <small>Konfirmasi</small>
+                </button>
+              </div>
+              <div v-else>
+                <span class="text-success">Sudah</span>
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+
+<!-- MODAL KONFIRMASI -->
+  <div class="modal fade" id="konfirmasi" tabindex="-1" role="dialog" aria-labelledby="konfirmasiLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body pb-0">
+        <img src="storage/images/spinner.svg" alt="" width="20" v-show="isProcessing" class="float-end">
+          <div>Tandai hadiah SUDAH diproses untuk username <strong>{{ userConfirm }}</strong>?</div>
+          <Transition>
+            <div v-if="confirmError == true" class="alert alert-danger py-1 mt-3">
+              User {{ userConfirm }} belum klaim voucher spin.
+            </div>
+          </Transition>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-sm btn-light" data-bs-dismiss="modal" @click="confirmError = false">Tidak</button>
+          <button class="btn btn-sm btn-success" style="width: 60px" @click="confirmUser(userConfirm)">Ya</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END MODAL KONFIRMASI -->
 </template>
 
 <script>
+import Voucher from 'voucher-code-generator'
 export default {
   data() {
     return {
       userAdd: '',
+      voucherAdd: '',
       userFind: '',
-      inputBorder: 'null',
+      inputBorderUser: 'null',
+      inputBorderVoucher: 'null',
       isSearching: false,
+      isProcessing: false,
+      isRegistering: false,
       memberList: [],
+      userConfirm: '',
+      confirmError: false,
     }
   },
 
@@ -81,10 +130,14 @@ export default {
 
     clearData() {
       this.userAdd = ''
+      this.voucherAdd = ''
       this.userFind = ''
-      this.inputBorder = 'null'
+      this.inputBorderUser = 'null'
+      this.inputBorderVoucher = 'null'
       this.isSearching = false
       this.memberList = []
+      this.userConfirm = ''
+      this.confirmError = false
     },
 
     listAllMember() {
@@ -96,18 +149,37 @@ export default {
     },
 
     addMember() {
+      this.inputBorderUser = null
+      this.inputBorderVoucher = null
+
       if (this.userAdd == '') {
-        this.inputBorder = 'border border-danger'
+        this.inputBorderUser = 'border border-danger'
+      } else if (this.voucherAdd == '') {
+        this.inputBorderVoucher = 'border border-danger'
       } else {
-        this.inputBorder = 'null'
-        let data = {username: this.userAdd}
+        this.inputBorderUser = null
+        this.inputBorderVoucher = null
+        let data = {
+          username: this.userAdd,
+          voucher: this.voucherAdd[0] // dari library hasil generate-nya dalam bentuk array
+        }
         axios
         .post('/add_member', {data: JSON.stringify(data)})
-        .then(() => {
+        .then((result) => {
           this.clearData()
           this.listAllMember()
+          console.log(result.data)
         })
       }
+    },
+
+    createVoucher() {
+      let voucher = Voucher.generate({
+        length: 16,
+        count: 1,
+        charset: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      });
+      this.voucherAdd = voucher
     },
 
     findMember() {
@@ -125,6 +197,29 @@ export default {
         })
       }, 200)
     },
+
+    konfirmasi(username) {
+      this.userConfirm = username
+    },
+    confirmUser(username) {
+      this.isProcessing = true
+      let data = { username: username }
+      axios
+      .post('/confirm_process', { data: JSON.stringify(data) })
+      .then(() => {
+        this.confirmError = false
+        this.listAllMember()
+        $('#konfirmasi').modal('hide')
+      })
+      .catch((error) => {
+        console.log(error.response)
+        this.confirmError = true
+      })
+      .finally(() => {
+        this.isProcessing = false
+      })
+    },
+
   },
 
   mounted() {
