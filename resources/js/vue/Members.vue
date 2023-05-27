@@ -206,13 +206,14 @@ export default {
       let data = { username: username }
       axios
       .post('/confirm_process', { data: JSON.stringify(data) })
-      .then(() => {
+      .then((result) => {
+        console.log(result)
         this.confirmError = false
         this.listAllMember()
         $('#konfirmasi').modal('hide')
       })
       .catch((error) => {
-        console.log(error.response)
+        console.log(error.response.data)
         this.confirmError = true
       })
       .finally(() => {

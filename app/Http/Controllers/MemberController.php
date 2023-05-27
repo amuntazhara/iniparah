@@ -41,9 +41,9 @@ class MemberController extends Controller
 
         if ($member->count() == 0) {
             Member::insert(['username' => $username, 'voucher' => $voucher, 'klaim' => 0, 'proses' => 0]);
-            return response()->json(200);
+            return response()->json('OK', 200);
         } else {
-            return response()->json(400);
+            return response()->json('Error', 400);
         }
 
     }
@@ -87,9 +87,9 @@ class MemberController extends Controller
         $member = Member::where('username', $data->username)->first();
         
         if ($member->klaim == 0)
-            return response()->json(400);
+            return response()->json('Error', 400);
         else
             Member::where('username', $data->username)->update(['proses' => 1]);
-            return response()->json(200);
+            return response()->json('OK', 200);
     }
 }
