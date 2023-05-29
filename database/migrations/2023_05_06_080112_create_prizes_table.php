@@ -28,7 +28,7 @@ return new class extends Migration
             ['hadiah' => 'Rp.75.000', 'deskripsi' => 'Hadiah 7'],
             ['hadiah' => 'Rp.100.000', 'deskripsi' => 'Jackpot'],
         ];
-        DB::table('assets')->insert($data);
+        DB::table('prizes')->insert($data);
     }
 
     /**

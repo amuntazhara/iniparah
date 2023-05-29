@@ -21,14 +21,14 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // DB::table('assets')->insert(
-        //     array(
-        //         'background' => 'background0.png',
-        //         'wheel' => 'wheel0.png',
-        //         'pin' => 'pin0.png',
-        //         'logo' => 'logo0.png'
-        //     )
-        // );
+        DB::table('assets')->insert(
+            array(
+                'background' => 'background0.png',
+                'wheel' => 'wheel0.png',
+                'pin' => 'pin0.png',
+                'logo' => 'logo0.png'
+            )
+        );
     }
 
     /**
