@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Assets extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
 	protected $table = "assets";
 	public static $tableName = "assets";
