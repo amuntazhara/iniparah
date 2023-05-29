@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assets;
 use App\Models\Prize;
 use App\Models\Member;
 use Illuminate\Http\Request;
@@ -11,7 +12,9 @@ class MemberController extends Controller
     public function index()
     {
         $spinner = Prize::select('hadiah')->get();
-        return view('memberMain')->with('spinner', $spinner);
+        $assets = Assets::select('*')->first();
+        return view('memberMain')->with('spinner', $spinner)
+                                ->with('assets', $assets);
     }
 
     public function get_members()
@@ -36,11 +39,11 @@ class MemberController extends Controller
         $data = json_decode(request()->data);
         $username = $data->username;
         $voucher = $data->voucher;
-        // $voucher = substr(str_shuffle(str_repeat('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',16)),0,16);
-        $member = Member::selectRaw('username')->where(['username' => $username])->get();
+        $data->gift == null ? $gift = 1 : $gift = $data->gift;
 
+        $member = Member::selectRaw('username')->where(['username' => $username])->get();
         if ($member->count() == 0) {
-            Member::insert(['username' => $username, 'voucher' => $voucher, 'klaim' => 0, 'proses' => 0]);
+            Member::insert(['username' => $username, 'voucher' => $voucher, 'hadiah' => $gift, 'klaim' => 0, 'proses' => 0]);
             return response()->json('OK', 200);
         } else {
             return response()->json('Error', 400);
@@ -62,7 +65,11 @@ class MemberController extends Controller
                 return response()->json('Voucher hanya dapat digunakan satu kali.', 400);
 
             // session()->put('username', $get->username);
-            return response()->json($get->username, 200);
+            $user_data = [
+                'username' => $get->username,
+                'hadiah' => $get->hadiah
+            ];
+            return response()->json($user_data, 200);
         }
     }
 

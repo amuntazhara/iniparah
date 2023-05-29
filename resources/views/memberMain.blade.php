@@ -135,6 +135,7 @@
     <script>
         // Untuk session spin
         var usr = null
+        var hadiah = null
 
         // Game config untuk Phaser.Game
         var game
@@ -181,10 +182,10 @@
             }
             
             preload() {
-                this.load.image("background", window.location.href + "images/background.png")
-                this.load.image("board", window.location.href + "images/wheel0.png")
-                this.load.image("pin", window.location.href + "images/pin.png")
-                this.load.image("logo", window.location.href + "images/logo.png")
+                this.load.image("background", window.location.href + "images/{{ $assets->background }}")
+                this.load.image("board", window.location.href + "images/{{ $assets->wheel }}")
+                this.load.image("pin", window.location.href + "images/{{ $assets->pin }}")
+                this.load.image("logo", window.location.href + "images/{{ $assets->logo }}")
             }
 
             create() {
@@ -208,8 +209,14 @@
 
             spinWheel() {
                 if (this.canSpin) {
-                    var rounds = Phaser.Math.Between(16, 20)
-                    var degrees = Phaser.Math.Between(321, 355)
+                    const rangeLower = [320, 275, 230, 185, 140, 95, 50, 5]
+                    const rangeUpper = [355, 310, 365, 220, 175, 130, 85, 40]
+
+                    const degree1 = rangeLower[hadiah - 1]
+                    const degree2 = rangeUpper[hadiah - 1]
+
+                    var rounds = Phaser.Math.Between(14, 20)
+                    var degrees = Phaser.Math.Between(degree1, degree2)
                     var prize = gameOptions.slices - 1 - Math.floor(degrees / (360 / gameOptions.slices))
                     this.tweens.add({
                         targets: [this.wheel],
@@ -221,7 +228,7 @@
                             this.canSpin = false
                             $('#finalPrize').text(gameOptions.slicePrizes[prize])
                             $('#prize').modal('show')
-                            updateDB()
+                            // updateDB()
                         }
                     })
                 } else {
@@ -243,7 +250,8 @@
             }
             window.axios.post('/verify', {data: JSON.stringify(data)}, config)
                 .then((result) => {
-                    usr = result.data
+                    usr = result.data.username
+                    hadiah = result.data.hadiah
                     $('#form').modal('hide')
                     game.scene.scenes[0].canSpin = true
                 })

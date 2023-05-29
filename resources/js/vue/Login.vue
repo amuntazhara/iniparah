@@ -2,7 +2,7 @@
   <div class="row bg-dark align-items-center justify-content-center m-0" style="height: 100vh">
     <div class="col-11 col-sm-4 bg-light p-1">
       <Transition>
-        <img src="storage/images/spinner.svg" alt="" width="25" class="float-end" v-show="isLoading">
+        <img src="images/spinner.svg" alt="" width="25" class="float-end" v-show="isLoading">
       </Transition>
       <div class="px-5 py-4">
         <h4 class="text-center text-primary mb-3"><strong>Login Panel</strong></h4>

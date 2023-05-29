@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('username');
             $table->string('voucher');
+            $table->integer('hadiah');
             $table->integer('klaim');
             $table->integer('proses');
         });

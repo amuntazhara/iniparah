@@ -25,18 +25,18 @@
           </div>
           <div class="row align-items-center">
             <div class="col-4">
-              <img src="images/wheel0.png" alt="" class="w-100">
+              <img :src="'images/' + assets.wheel" alt="" class="w-100">
             </div>
             <div class="col-4">
-              <img src="images/pin.png" alt="" class="w-100">
+              <img :src="'images/' + assets.pin" alt="" class="w-100">
             </div>
             <div class="col-4">
-              <img src="images/background0.png" alt="" class="w-100">
+              <img :src="'images/' + assets.background" alt="" class="w-100">
             </div>
           </div>
           <div class="row">
             <div class="col-4 text-center">
-              <button class="btn btn-sm btn-info w-100 mx-1" data-bs-toggle="modal" data-bs-target="#formUpload" @click="upload('Papan')"><i class="ti ti-pokeball"></i> Update Papan</button>
+              <button class="btn btn-sm btn-info w-100 mx-1" data-bs-toggle="modal" data-bs-target="#formUpload" @click="upload('Wheel')"><i class="ti ti-pokeball"></i> Update Wheel</button>
             </div>
             <div class="col-4 text-center">
               <button class="btn btn-sm btn-info w-100 mx-1" data-bs-toggle="modal" data-bs-target="#formUpload" @click="upload('Pin')"><i class="ti ti-arrow-up-tail"></i> Update Pin</button>
@@ -61,9 +61,8 @@
             <div class="col-6">
               <form @submit.prevent="updateImage(uploadHeader)">
                 <input type="file" @change="onFileChange" ref="fileName" accept="image/*" class="form-control form-control-sm mb-2">
-                <button class="btn btn-sm btn-muted w-100 mb-4">Hapus Gambar</button>
-                <button class="btn btn-sm btn-success w-100" type="submit">Update</button>
-                <a role="button" class="btn btn-sm btn-light w-100" data-bs-dismiss="modal">Batal</a>
+                <button type="submit" class="btn btn-sm btn-success w-100 mb-2 mt-4">Update</button>
+                <button type="button" class="btn btn-sm btn-light w-100" data-bs-dismiss="modal">Batal</button>
               </form>
             </div>
             <div class="col-6">
@@ -81,6 +80,7 @@ export default {
   data() {
     return {
       prizeList: [],
+      assets: {},
       uploadHeader: '',
       image: '',
     }
@@ -88,10 +88,23 @@ export default {
 
   methods: {
     Initiate() {
+      this.getPrizes()
+      this.getAssets()
+    },
+
+    getPrizes() {
       axios
       .get('/get_prizes')
       .then((result) => {
         this.prizeList = result.data
+      })
+    },
+
+    getAssets() {
+      axios
+      .get('/get_assets')
+      .then((result) => {
+        this.assets = result.data
       })
     },
 
@@ -113,6 +126,12 @@ export default {
 
     upload(header) {
       this.uploadHeader = header
+      if (this.uploadHeader == 'Papan')
+        this.image = 'images/' + this.assets.wheel
+      if (this.uploadHeader == 'Pin')
+        this.image = 'images/' + this.assets.pin
+      if (this.uploadHeader == 'Background')
+        this.image = 'images/' + this.assets.background
     },
 
     onFileChange(e) {
@@ -130,6 +149,22 @@ export default {
         vm.image = e.target.result;
       };
       reader.readAsDataURL(file);
+    },
+
+    updateImage(header) {
+      let data = {
+        file: this.$refs.fileName.files[0],
+        head: header
+      }
+      
+      axios
+      .post('/update_asset', data, { headers:{'Content-Type': 'multipart/form-data'} })
+      .then((result) => {
+        console.log(result.data)
+      })
+      .catch((error) => {
+        console.log(error.response.data)
+      })
     },
   },
 

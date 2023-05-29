@@ -1,43 +1,61 @@
 <template>
-  <div class="accordion shadow-sm mb-3 sticky-top" style="top: 75px; z-index:2" id="accordionExample">
+  <div class="accordion shadow-sm mb-3 sticky-top" style="top: 75px; z-index:2" id="aksesMember">
     <div class="accordion-item">
       <h2 class="accordion-header" id="headingOne">
         <button class="accordion-button bg-dark py-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
           <strong class="text-muted">Akses</strong>
         </button>
       </h2>
-      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#aksesMember">
         <div class="accordion-body p-2">
           <div class="row">
-            <form @submit.prevent="addMember" class="col-6">
-              <label class="mb-1">Tambah Member</label>
+            <form @submit.prevent="addMember" class="col-8">
+              <label class="mb-1">Tambah Member</label> <img src="images/spinner.svg" alt="" width="10" v-show="isRegistering">
               <div class="row align-items-center">
-                <div class="col-5">
-                  <input :class="'form-control form-control-sm ' + inputBorderUser" type="text" v-model="userAdd" placeholder="Username">
+                <div class="col-9 mb-2">
+                  <div class="row align-items-center">
+                    <div class="col-3">
+                      <small>Username</small>
+                    </div>
+                    <div class="col-9">
+                      <input :class="'form-control form-control-sm ' + inputBorderUser" type="text" v-model="userAdd" placeholder="Username">
+                    </div>
+                  </div>
                 </div>
-                <div class="col-5">
-                  <input :class="'form-control form-control-sm ' + inputBorderVoucher" type="text" v-model="voucherAdd" placeholder="Voucher" @focus="createVoucher">
+                <div class="col-3 mb-2">
+                  <div class="row align-items-center">
+                    <div class="col-4">
+                      <small>Hadiah</small>
+                    </div>
+                    <div class="col-8">
+                      <input :class="'form-control form-control-sm'" type="text" v-model="giftSet" placeholder="Hadiah">
+                    </div>
+                  </div>
                 </div>
-                <div class="col-2">
-                  <button class="btn btn-sm btn-success w-100">
-                    <i class="ti ti-user-plus"></i>
+                <div class="col-9">
+                  <div class="row align-items-center">
+                    <div class="col-3">
+                      <small>Voucher</small>
+                    </div>
+                    <div class="col-6">
+                      <input :class="'form-control form-control-sm ' + inputBorderVoucher" type="text" v-model="voucherAdd" placeholder="Voucher">
+                    </div>
+                    <div class="col-3">
+                      <button  type="button" class="btn btn-sm btn-warning w-100 text-dark" @click="createVoucher">
+                        <i class="ti ti-refresh"></i> <span>Generate</span>
+                      </button>    
+                    </div>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <button type="submit" class="btn btn-sm btn-success w-100">
+                    <i class="ti ti-user-plus"></i> <span>Tambah Member</span>
                   </button>
                 </div>
               </div>
-              <!-- <label>Tambah</label>
-              <div class="row">
-                <div class="col">
-                  <input :class="'form-control form-control-sm ' + inputBorder" type="text" v-model="userAdd" placeholder="Masukkan Username">
-                </div>
-                <div class="col-2 ps-0">
-                  <button class="btn btn-sm btn-success w-100">
-                    <i class="ti ti-user-plus"></i>
-                  </button>
-                </div>
-              </div> -->
             </form>
-            <form class="col-6 align-items-center">
-              <label class="mb-1">Cari</label> <img src="storage/images/spinner.svg" alt="" width="10" v-show="isSearching">
+            <form class="col-4 align-items-center">
+              <label class="mb-1">Cari</label> <img src="images/spinner.svg" alt="" width="10" v-show="isSearching">
               <input class="form-control form-control-sm" type="text" v-model="userFind" placeholder="Masukkan Username" @input="findMember">
             </form>
           </div>
@@ -85,7 +103,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-body pb-0">
-        <img src="storage/images/spinner.svg" alt="" width="20" v-show="isProcessing" class="float-end">
+        <img src="images/spinner.svg" alt="" width="20" v-show="isProcessing" class="float-end">
           <div>Tandai hadiah SUDAH diproses untuk username <strong>{{ userConfirm }}</strong>?</div>
           <Transition>
             <div v-if="confirmError == true" class="alert alert-danger py-1 mt-3">
@@ -109,6 +127,7 @@ export default {
   data() {
     return {
       userAdd: '',
+      giftSet: 1,
       voucherAdd: '',
       userFind: '',
       inputBorderUser: 'null',
@@ -130,6 +149,7 @@ export default {
 
     clearData() {
       this.userAdd = ''
+      this.giftSet = 1
       this.voucherAdd = ''
       this.userFind = ''
       this.inputBorderUser = 'null'
@@ -151,6 +171,7 @@ export default {
     addMember() {
       this.inputBorderUser = null
       this.inputBorderVoucher = null
+      this.isRegistering = true
 
       if (this.userAdd == '') {
         this.inputBorderUser = 'border border-danger'
@@ -161,7 +182,8 @@ export default {
         this.inputBorderVoucher = null
         let data = {
           username: this.userAdd,
-          voucher: this.voucherAdd[0] // dari library hasil generate-nya dalam bentuk array
+          voucher: this.voucherAdd[0], // dari library hasil generate-nya dalam bentuk array
+          gift: this.giftSet,
         }
         axios
         .post('/add_member', {data: JSON.stringify(data)})
@@ -169,6 +191,9 @@ export default {
           this.clearData()
           this.listAllMember()
           console.log(result.data)
+        })
+        .finally(() => {
+          this.isRegistering = false
         })
       }
     },

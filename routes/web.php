@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PrizeController;
+use App\Http\Controllers\AssetsController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\AdminAuthController;
 
@@ -39,6 +40,9 @@ Route::group(['middleware' => 'auth'], function () {
   
   Route::get('/get_prizes', [PrizeController::class, 'get_prizes']);
   Route::post('/update_prizes', [PrizeController::class, 'update_prizes']);
+
+  Route::get('/get_assets', [AssetsController::class, 'get_assets']);
+  Route::post('/update_asset', [AssetsController::class, 'update_asset']);
 
   Route::get('/logout_panel', [AdminAuthController::class, 'logout_panel']);
 });
