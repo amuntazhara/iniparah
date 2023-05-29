@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('background');
             $table->string('wheel');
             $table->string('pin');
-            $table->string('logo;');
+            $table->string('logo');
             $table->timestamps();
         });
 
