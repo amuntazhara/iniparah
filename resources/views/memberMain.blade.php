@@ -228,7 +228,7 @@
                             this.canSpin = false
                             $('#finalPrize').text(gameOptions.slicePrizes[prize])
                             $('#prize').modal('show')
-                            // updateDB()
+                            updateDB()
                         }
                     })
                 } else {
