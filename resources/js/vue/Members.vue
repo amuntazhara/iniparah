@@ -10,7 +10,9 @@
         <div class="accordion-body p-2">
           <div class="row">
             <form @submit.prevent="addMember" class="col-9">
-              <strong class="mb-1">Tambah Member</strong> <img src="images/spinner.svg" alt="" width="10" v-show="isRegistering">
+              <div class="mb-1">
+                <strong class="mb-2">Tambah Member</strong> <img src="images/spinner.svg" alt="" width="10" v-show="isRegistering">
+              </div>
               <div class="row align-items-center">
                 <div class="col-8 mb-2">
                   <div class="row align-items-center">
@@ -58,7 +60,9 @@
               </div>
             </form>
             <form class="col-3 align-items-center">
-              <strong class="mb-1">Cari</strong> <img src="images/spinner.svg" alt="" width="10" v-show="isSearching">
+              <div class="mb-1">
+                <strong>Cari</strong> <img src="images/spinner.svg" alt="" width="10" v-show="isSearching">
+              </div>
               <input class="form-control form-control-sm" type="text" v-model="userFind" placeholder="Masukkan Username" @input="findMember">
             </form>
           </div>
@@ -73,26 +77,28 @@
         <thead class="text-center bg-dark">
           <th class="border border-light py-1">Username</th>
           <th class="border border-light py-1">Voucher</th>
+          <th class="border border-light py-1">Hadiah</th>
           <th class="border border-light py-1">Klaim</th>
           <th class="border border-light py-1">Diproses</th>
         </thead>
         <tbody>
           <tr v-for="member in memberList" :key="member.id">
-            <td class="border border-light text-left py-1">{{ member.username }}</td>
-            <td class="border border-light text-left py-1">{{ member.voucher }}</td>
+            <td class="border border-light text-left py-1"><small>{{ member.username }}</small></td>
+            <td class="border border-light text-left py-1"><small>{{ member.voucher }}</small></td>
+            <td class="border border-light text-left py-1"><small>{{ member.hadiah }}</small></td>
             <td class="border border-light text-center py-1">
-              <span v-if="member.klaim == 0" class="text-danger">Belum</span>
-              <span v-else class="text-success">Sudah</span>
+              <small v-if="member.klaim == 0" class="text-danger">Belum</small>
+              <small v-else class="text-success">Sudah</small>
             </td>
             <td class="border border-light text-center py-1">
               <div v-if="member.proses == 0">
-                <span class="me-2 text-danger">Belum</span>
+                <small class="me-2 text-danger">Belum</small>
                 <button class="btn btn-sm btn-success py-0 px-1" data-bs-target="#konfirmasi" data-bs-toggle="modal" @click="konfirmasi(member.username)">
                   <small>Konfirmasi</small>
                 </button>
               </div>
               <div v-else>
-                <span class="text-success">Sudah</span>
+                <small class="text-success">Sudah</small>
               </div>
             </td>
           </tr>

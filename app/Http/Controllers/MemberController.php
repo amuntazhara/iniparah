@@ -19,7 +19,8 @@ class MemberController extends Controller
 
     public function get_members()
     {
-        $list = Member::selectRaw('username, voucher, klaim, proses')
+        $list = Member::selectRaw('username, voucher, prizes.hadiah, klaim, proses')
+                    ->join('prizes', 'prizes.id', '=', 'members.hadiah', 'inner')
                     ->orderBy('klaim', 'asc')
                     ->orderBy('proses', 'asc')
                     ->orderBy('username', 'asc')
