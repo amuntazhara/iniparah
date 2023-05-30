@@ -9,10 +9,10 @@
       <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#aksesMember">
         <div class="accordion-body p-2">
           <div class="row">
-            <form @submit.prevent="addMember" class="col-8">
-              <label class="mb-1">Tambah Member</label> <img src="images/spinner.svg" alt="" width="10" v-show="isRegistering">
+            <form @submit.prevent="addMember" class="col-9">
+              <strong class="mb-1">Tambah Member</strong> <img src="images/spinner.svg" alt="" width="10" v-show="isRegistering">
               <div class="row align-items-center">
-                <div class="col-9 mb-2">
+                <div class="col-8 mb-2">
                   <div class="row align-items-center">
                     <div class="col-3">
                       <small>Username</small>
@@ -22,17 +22,20 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-3 mb-2">
+                <div class="col-4 mb-2">
                   <div class="row align-items-center">
                     <div class="col-4">
                       <small>Hadiah</small>
                     </div>
                     <div class="col-8">
-                      <input :class="'form-control form-control-sm'" type="text" v-model="giftSet" placeholder="Hadiah">
+                      <select :class="'form-select form-select-sm ' + inputBorderGift" v-model="giftSet">
+                        <option v-for="(prize, index) in prizeList" :key="prize.id" :value="index + 1">{{ prize.hadiah }}</option>
+                      </select>
+                      <!-- <input :class="'form-control form-control-sm text-center'" type="number" v-model="giftSet"> -->
                     </div>
                   </div>
                 </div>
-                <div class="col-9">
+                <div class="col-8">
                   <div class="row align-items-center">
                     <div class="col-3">
                       <small>Voucher</small>
@@ -47,15 +50,15 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                   <button type="submit" class="btn btn-sm btn-success w-100">
                     <i class="ti ti-user-plus"></i> <span>Tambah Member</span>
                   </button>
                 </div>
               </div>
             </form>
-            <form class="col-4 align-items-center">
-              <label class="mb-1">Cari</label> <img src="images/spinner.svg" alt="" width="10" v-show="isSearching">
+            <form class="col-3 align-items-center">
+              <strong class="mb-1">Cari</strong> <img src="images/spinner.svg" alt="" width="10" v-show="isSearching">
               <input class="form-control form-control-sm" type="text" v-model="userFind" placeholder="Masukkan Username" @input="findMember">
             </form>
           </div>
@@ -126,12 +129,14 @@ import Voucher from 'voucher-code-generator'
 export default {
   data() {
     return {
+      prizeList: [],
       userAdd: '',
-      giftSet: 1,
+      giftSet: '',
       voucherAdd: '',
       userFind: '',
-      inputBorderUser: 'null',
-      inputBorderVoucher: 'null',
+      inputBorderUser: null,
+      inputBorderGift: null,
+      inputBorderVoucher: null,
       isSearching: false,
       isProcessing: false,
       isRegistering: false,
@@ -145,15 +150,17 @@ export default {
     Initiate() {
       this.clearData()
       this.listAllMember()
+      this.listPrizes()
     },
 
     clearData() {
       this.userAdd = ''
-      this.giftSet = 1
+      this.giftSet = ''
       this.voucherAdd = ''
       this.userFind = ''
-      this.inputBorderUser = 'null'
-      this.inputBorderVoucher = 'null'
+      this.inputBorderUser = null
+      this.inputBorderGift = null
+      this.inputBorderVoucher = null
       this.isSearching = false
       this.memberList = []
       this.userConfirm = ''
@@ -168,18 +175,30 @@ export default {
       })
     },
 
+    listPrizes() {
+      axios
+      .get('/get_prizes')
+      .then((result) => {
+        this.prizeList = result.data
+      })
+    },
+
     addMember() {
       this.inputBorderUser = null
+      this.inputBorderGift = null
       this.inputBorderVoucher = null
-      this.isRegistering = true
 
       if (this.userAdd == '') {
         this.inputBorderUser = 'border border-danger'
+      } else if (this.giftSet == '') {
+        this.inputBorderGift = 'border border-danger'
       } else if (this.voucherAdd == '') {
         this.inputBorderVoucher = 'border border-danger'
       } else {
         this.inputBorderUser = null
+        this.inputBorderGift = null
         this.inputBorderVoucher = null
+        this.isRegistering = true
         let data = {
           username: this.userAdd,
           voucher: this.voucherAdd[0], // dari library hasil generate-nya dalam bentuk array

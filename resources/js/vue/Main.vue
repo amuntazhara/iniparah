@@ -28,12 +28,12 @@
                 </span>
                 <span class="hide-menu">Hadiah</span>
               </div>
-              <div class="sidebar-link" style="cursor: pointer" @click="Navigate('Pengaturan')" aria-expanded="false">
+              <!-- <div class="sidebar-link" style="cursor: pointer" @click="Navigate('Pengaturan')" aria-expanded="false">
                 <span>
                   <i class="ti ti-settings"></i>
                 </span>
                 <span class="hide-menu">Pengaturan Web</span>
-              </div>
+              </div> -->
               <hr>
               <div class="sidebar-link text-danger" style="cursor: pointer" @click="Logout" aria-expanded="false">
                 <span>
